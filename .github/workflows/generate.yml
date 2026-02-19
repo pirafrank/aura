@@ -25,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: false  # will clone later with proper SSH key
           ref: main
 
       - name: Install requirements
@@ -47,6 +47,19 @@ jobs:
             git config commit.gpgsign true
             git config gpg.format ssh
             git config user.signingkey "${{ secrets.SSH_PUBLIC_SIGN_KEY }}"
+
+      - name: Add AUR to known hosts
+        run: |
+            mkdir -p ~/.ssh
+            chmod 0700 ~/.ssh
+            touch ~/.ssh/known_hosts
+            chmod 0600 ~/.ssh/known_hosts
+            ssh-keyscan -t rsa aur.archlinux.org >> ~/.ssh/known_hosts
+            ssh-keyscan -t ed25519 aur.archlinux.org >> ~/.ssh/known_hosts
+
+      - name: Clone submodules
+        run: |
+          git submodule update --init --recursive
 
       - name: Install Python
         uses: actions/setup-python@v5
@@ -88,16 +101,6 @@ jobs:
             MESSAGE="chore: update ${PROJECT_NAME} @ ${today}"
             echo "Commit message: ${MESSAGE}"
             echo "message=${MESSAGE}" >> $GITHUB_OUTPUT
-
-      - name: Add AUR to known hosts
-        if: steps.git-check.outputs.has_changes == 'true'
-        run: |
-            mkdir -p ~/.ssh
-            chmod 0700 ~/.ssh
-            touch ~/.ssh/known_hosts
-            chmod 0600 ~/.ssh/known_hosts
-            ssh-keyscan -t rsa aur.archlinux.org >> ~/.ssh/known_hosts
-            ssh-keyscan -t ed25519 aur.archlinux.org >> ~/.ssh/known_hosts
 
       - name: Commit changes to AUR
         if: steps.git-check.outputs.has_changes == 'true'
