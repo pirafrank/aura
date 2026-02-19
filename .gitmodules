@@ -1,3 +1,6 @@
 [submodule "packages/poof-bin"]
 	path = packages/poof-bin
 	url = ssh://aur@aur.archlinux.org/poof-bin.git
+[submodule "packages/vault-conductor-bin"]
+	path = packages/vault-conductor-bin
+	url = ssh://aur@aur.archlinux.org/vault-conductor-bin.git

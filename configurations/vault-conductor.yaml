@@ -1,0 +1,14 @@
+# Repository on github of the tool to provide on AUR.
+# It MUST provide a stable release with assets for the different architectures.
+github_repo: "pirafrank/vault-conductor"
+# Mirror on github of the AUR repo, if you want one.
+# You need to manually create it on github first.
+github_aur_repo: "pirafrank/aur-vault-conductor-bin"
+# Where the submodule is located in the repo root.
+submodule_path: "packages/vault-conductor-bin"
+# Corresponding template path in the templates/ directory.
+template_path: "templates/pirafrank@vault-conductor.PKGBUILD.jinja"
+# Asset patterns to match the assets in the release.
+asset_patterns:
+  x86_64: "{NAME}-{VERSION}-x86_64-unknown-linux-gnu.tar.gz"
+  aarch64: "{NAME}-{VERSION}-aarch64-unknown-linux-gnu.tar.gz"

@@ -1,0 +1,27 @@
+# Maintainer: Francesco Pira <dev at fpira dot com>
+
+pkgname=vault-conductor-bin
+pkgver={{ version }}
+pkgrel=1
+pkgdesc="An SSH Agent that provides SSH keys stored in Bitwarden Secrets Manager"
+url="https://github.com/pirafrank/vault-conductor"
+license=('MIT')
+provides=('vault-conductor')
+conflicts=('vault-conductor')
+
+# List ALL Arch-compatible architectures you support
+arch=('x86_64' 'aarch64')
+
+# Dynamic source URL selection based on the build architecture
+source_x86_64=("${url}/releases/download/v${pkgver}/vault-conductor-${pkgver}-x86_64-unknown-linux-gnu.tar.gz")
+sha256sums_x86_64=('{{ x86_64_sha256 }}')
+
+source_aarch64=("${url}/releases/download/v${pkgver}/vault-conductor-${pkgver}-aarch64-unknown-linux-gnu.tar.gz")
+sha256sums_aarch64=('{{ aarch64_sha256 }}')
+
+package() {
+    # Arch automatically downloads only the source_CARCH file
+    # But it puts it in srcdir, so you might need a wildcard or specific logic if filenames differ
+
+    install -Dm755 "${srcdir}/vault-conductor" "${pkgdir}/usr/bin/vault-conductor"
+}
