@@ -10,13 +10,21 @@ Fork and customize to your needs.
 
 A list of the provided packages:
 
-- <https://aur.archlinux.org/packages/poof-bin>
+|Name|GitHub|AUR|
+|---|---|---|
+|`poof`|[GitHub](https://github.com/pirafrank/poof)|[AUR](https://aur.archlinux.org/packages/poof-bin)|
+|`vault-conductor`|[GitHub](https://github.com/pirafrank/vault-conductor)|[AUR](https://aur.archlinux.org/packages/vault-conductor-bin)|
 
 ## How it works
 
 Each package is maintained as a git submodule pointing to its AUR repository.
 
 A Python update script reads a YAML configuration file, fetches the latest stable release information from GitHub releases, and renders a `PKGBUILD` file from Jinja template. Then, it generates the corresponding `.SRCINFO` file.
+
+A GitHub Action is used to automate the update process, ensuring that package definitions remain in sync with the latest releases from GitHub. In the action, `vault-conductor` itself is used as SSH-Agent to load both:
+
+- the SSH Key to sign the commit with updated `PKGBUILD` and `.SRCINFO`,
+- and the SSH Key dedicated to push those changes to AUR.
 
 ## Setup environment
 
@@ -55,7 +63,7 @@ source .venv/bin/activate
 python3 update.py <configuration filename>
 # note: 'makepkg --printsrcinfo > .SRCINFO' is run by the script itself!
 # test (Arch Linux-only)
-cd ../[submodule]
+cd ../packages/[submodule]
 namcap PKGBUILD
 ```
 
@@ -66,15 +74,15 @@ Fork and use for your own tools!
 **Requirements:**
 
 1. You have manually created your tool repo on AUR (because [that is how AUR works](https://wiki.archlinux.org/title/AUR_submission_guidelines)),
-2. You have cleaned the `configurations/` directory and removed any existing submodules.
+2. You have cleaned the `configurations/` directory and removed any existing submodules from `packages/`.
 
 **Add a repository:**
 
 It is as easy as:
 
-1. Add the required repository as submodule in this root
-2. Write configuration in `configurations/` directory
-3. Create a Jinja template for it in `templates/` directory
+1. Add the required repository as submodule in `packages/`
+2. Write configuration in `configurations/`
+3. Create a Jinja template for it in `templates/`
 4. Commit and push changes!
 
 ## Brother project
