@@ -1,0 +1,35 @@
+name: Setup Vault Conductor
+description: Setup Vault Conductor
+inputs:
+  bws_access_token:
+    description: The access token for the Bitwarden Secret Manager
+    required: true
+  bw_secret_ids:
+    description: The IDs of the Bitwarden secrets to use
+    required: true
+  bw_server_endpoint:
+    description: The endpoint of the Bitwarden server
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install vault-conductor
+      shell: bash
+      run: |
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        curl -sSL https://api.github.com/repos/pirafrank/vault-conductor/releases/latest | jq -r '.assets[] | select(.name | test("vault-conductor-.*-x86_64-unknown-linux-gnu\\.tar\\.gz")) | .browser_download_url' | xargs curl -sSL -o vault-conductor.tar.gz
+        tar -xzf vault-conductor.tar.gz
+        mkdir -p "$HOME/.local/bin"
+        mv vault-conductor "$HOME/.local/bin/vault-conductor"
+    - name: Start vault-conductor
+      shell: bash
+      env:
+        BWS_ACCESS_TOKEN: ${{ inputs.bws_access_token }}
+        BW_SECRET_IDS: ${{ inputs.bw_secret_ids }}
+        BW_SERVER_ENDPOINT: ${{ inputs.bw_server_endpoint }}
+      run: |
+        echo "SSH_AUTH_SOCK: $SSH_AUTH_SOCK"
+        vault-conductor start
+        sleep 5  # give it time to start and write the socket file
+        ls -la /tmp
+        ssh-add -L
