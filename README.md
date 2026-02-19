@@ -1,5 +1,7 @@
 # 💫 AURA - Arch User Repository Automation
 
+[![Update AUR Package](https://github.com/pirafrank/aura/actions/workflows/generate.yml/badge.svg?branch=main)](https://github.com/pirafrank/aura/actions/workflows/generate.yml)
+
 A way to automate updates of binaries published to AUR.
 
 This repository provides packages of CLI tools developed and/or maintained by me.
