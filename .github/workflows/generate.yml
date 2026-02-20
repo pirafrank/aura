@@ -42,11 +42,11 @@ jobs:
 
       - name: Configure Git
         run: |
-            git config user.name "Francesco Pira"
-            git config user.email "dev@fpira.com"
-            git config commit.gpgsign true
-            git config gpg.format ssh
-            git config user.signingkey "${{ secrets.SSH_PUBLIC_SIGN_KEY }}"
+            git config --global user.name "Francesco Pira"
+            git config --global user.email "dev@fpira.com"
+            git config --global commit.gpgsign true
+            git config --global gpg.format ssh
+            git config --global user.signingkey "${{ secrets.SSH_PUBLIC_SIGN_KEY }}"
 
       - name: Add AUR to known hosts
         run: |
@@ -118,8 +118,8 @@ jobs:
             git commit -S -m "${{ steps.generate_commit_message.outputs.message }}"
             git push
 
-      - name: Print AUR and commit URL
+      - name: AUR and commit URLs
         if: steps.git-check.outputs.has_changes == 'true'
         run: |
             echo "AUR Package: https://aur.archlinux.org/packages/${{ env.PROJECT_NAME }}-bin"
-            echo "Commit URL: https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/commit/$(git rev-parse HEAD)"
+            echo "Commit URL: https://github.com/${{ github.repository }}/commit/$(git rev-parse HEAD)"
