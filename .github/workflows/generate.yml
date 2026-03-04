@@ -108,7 +108,7 @@ jobs:
             cd ${{ steps.get_submodule_path.outputs.submodule_path }}
             git add PKGBUILD .SRCINFO
             git commit -S -m "${{ steps.generate_commit_message.outputs.message }}"
-            git push
+            git push origin HEAD:master
 
       - name: Commit submodule update
         id: commit_changes
